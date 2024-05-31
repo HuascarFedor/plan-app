@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_app/views/task_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/plan_notifier.dart';
@@ -75,7 +76,13 @@ class _PlanScreenState extends State<PlanScreen> with ScrollToLastItemMixin {
                 fontSize: 18.0,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => TaskScreen(plan: plan),
+                ),
+              );
+            },
             trailing: IconButton(
               onPressed: () {
                 _showDeletePlanDialog(planNotifier, plan);
@@ -121,8 +128,7 @@ class _PlanScreenState extends State<PlanScreen> with ScrollToLastItemMixin {
                 planNotifier.deletePlan(plan);
                 if (planNotifier.erroMessage != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(planNotifier.erroMessage!))
-                  );
+                      SnackBar(content: Text(planNotifier.erroMessage!)));
                 }
               });
         });

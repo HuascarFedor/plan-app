@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../models/plan.dart';
+import '../models/task.dart';
 
 class TodoRepository {
   Database? _database;
@@ -25,6 +26,8 @@ class TodoRepository {
   Future _createDB(Database db, int version) async {
     await db.execute(
         'CREATE TABLE Plans(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)');
+    await db.execute(
+        'CREATE TABLE Tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, complete INTEGER, planId INTEGER)');
   }
 
   Future<List<Plan>> getAllPlans() async {
@@ -41,10 +44,19 @@ class TodoRepository {
 
   Future deletePlan(Plan plan) async {
     final db = await database;
-    await db.delete(
-      'Plans',
-      where: 'id = ?',
-      whereArgs: [plan.id]
-    );
+    await db.delete('Plans', where: 'id = ?', whereArgs: [plan.id]);
+  }
+
+  Future<List<Task>> getTasksForPlan(Plan plan) async {
+    final db = await database;
+    final List<Map<String, dynamic>> taskMaps =
+        await db.query('Tasks', where: 'planId = ?', whereArgs: [plan.id]);
+    return taskMaps.map((taskMap) => Task.fromMap(taskMap)).toList();
+  }
+
+  Future<int> insertTask(Task task) async {
+    final db = await database;
+    int id = await db.insert('Tasks', task.toMap());
+    return id;
   }
 }
