@@ -38,4 +38,13 @@ class TodoRepository {
     int id = await db.insert('Plans', plan.toMap());
     return id;
   }
+
+  Future deletePlan(Plan plan) async {
+    final db = await database;
+    await db.delete(
+      'Plans',
+      where: 'id = ?',
+      whereArgs: [plan.id]
+    );
+  }
 }

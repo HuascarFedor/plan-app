@@ -39,4 +39,15 @@ class PlanNotifier extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> deletePlan(Plan plan) async {
+    try {
+      _errorMessage = null;
+      notifyListeners();
+      await _planController.deletePlan(plan);
+    } catch (e) {
+      _errorMessage = "Error al eliminar el plan $e";
+    }
+    notifyListeners();
+  }
 }

@@ -101,8 +101,7 @@ class _PlanScreenState extends State<PlanScreen> with ScrollToLastItemMixin {
             planNotifier.addPlan(text);
             if (planNotifier.erroMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(planNotifier.erroMessage!))
-              );
+                  SnackBar(content: Text(planNotifier.erroMessage!)));
             }
             scrollToLastItem();
           },
@@ -119,7 +118,12 @@ class _PlanScreenState extends State<PlanScreen> with ScrollToLastItemMixin {
               title: 'Eliminar plan',
               content: '¿Está seguro de eliminar el plan?',
               onDelete: () {
-                //planNotifier.deletePlan(plan);
+                planNotifier.deletePlan(plan);
+                if (planNotifier.erroMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(planNotifier.erroMessage!))
+                  );
+                }
               });
         });
   }

@@ -13,4 +13,8 @@ class PlanService {
   Future<int> addPlan(Plan plan) async {
     return await _todoRepository.insertPlan(plan);
   }
+
+  Future<void> deletePlan(Plan plan) async {
+    await _todoRepository.deletePlan(plan);
+  }
 }
