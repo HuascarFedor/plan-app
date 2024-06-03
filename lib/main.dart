@@ -15,8 +15,15 @@ class PlanApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PlanNotifier(PlanController(PlanService(TodoRepository()))),
+    return MultiProvider(
+      providers: [
+        Provider<TodoRepository>(
+          create: (_) => TodoRepository(),
+        ),
+        ChangeNotifierProvider<PlanNotifier>(
+          create: (context) => PlanNotifier(PlanController(PlanService(Provider.of<TodoRepository>(context, listen: false)))),
+        ),
+      ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: PlanScreen(),
