@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_app/views/widgets/add_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/task_controller.dart';
@@ -28,7 +29,8 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TaskNotifier>(
-      create: (_) => TaskNotifier(TaskController(plan, TaskService(Provider.of<TodoRepository>(context, listen: false)))),
+      create: (_) => TaskNotifier(TaskController(plan,
+          TaskService(Provider.of<TodoRepository>(context, listen: false)))),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Plan: ${plan.name}'),
@@ -37,13 +39,42 @@ class _TaskScreenState extends State<TaskScreen> {
           children: <Widget>[
             Expanded(
               child: Consumer<TaskNotifier>(
-                builder: (context, taskNotifier, child) => _buildList(taskNotifier),
+                builder: (context, taskNotifier, child) =>
+                    _buildList(taskNotifier),
               ),
             ),
           ],
         ),
+        floatingActionButton: Consumer<TaskNotifier>(
+          builder: (context, taskNotifier, child) {
+            return FloatingActionButton(
+              onPressed: () => _showAddTaskDialog(taskNotifier),
+              child: const Icon(Icons.add),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _showAddTaskDialog(TaskNotifier taskNotifier) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddDialog(
+              title: "Añadir nueva tarea",
+              decoration: "Descripción",
+              onAdd: (String text) {
+                taskNotifier.addTask(text);
+                if (taskNotifier.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:Text(taskNotifier.errorMessage!)
+                    )
+                  );
+                }
+              });
+        });
   }
 
   Widget _buildList(TaskNotifier taskNotifier) {
@@ -81,8 +112,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 fontSize: 18.0,
               ),
             ),
-            onTap: () {
-            },
+            onTap: () {},
             trailing: IconButton(
               onPressed: () {
                 //_showDeletePlanDialog(planNotifier, plan);
