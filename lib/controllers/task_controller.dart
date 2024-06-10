@@ -32,9 +32,19 @@ class TaskController {
     try {
       int id = await _taskService
           .addTask(Task(description: description, planId: _plan.id!));
-      _tasks.add(Task(id:id, description: description, planId: _plan.id!));
+      _tasks.add(Task(id: id, description: description, planId: _plan.id!));
     } catch (e) {
       throw Exception("Error al añadir la tarea: $e");
+    }
+  }
+
+  Future<void> deleteTask(Task task) async {
+    try {
+      await _taskService.deleteTask(task);
+    } catch (e) {
+      throw Exception('Error al eliminar la tarea: $e');
+    } finally {
+      _tasks.removeWhere((item) => item.id == task.id);
     }
   }
 }

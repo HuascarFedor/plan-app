@@ -15,6 +15,7 @@ class PlanService {
   }
 
   Future<void> deletePlan(Plan plan) async {
+    await _todoRepository.deleteAllTaskForPlan(plan);
     await _todoRepository.deletePlan(plan);
   }
 }

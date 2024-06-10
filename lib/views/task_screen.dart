@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:plan_app/models/task.dart';
 import 'package:plan_app/views/widgets/add_dialog.dart';
+import 'package:plan_app/views/widgets/delete_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/task_controller.dart';
@@ -68,10 +70,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 taskNotifier.addTask(text);
                 if (taskNotifier.errorMessage != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content:Text(taskNotifier.errorMessage!)
-                    )
-                  );
+                      SnackBar(content: Text(taskNotifier.errorMessage!)));
                 }
               });
         });
@@ -115,7 +114,7 @@ class _TaskScreenState extends State<TaskScreen> {
             onTap: () {},
             trailing: IconButton(
               onPressed: () {
-                //_showDeletePlanDialog(planNotifier, plan);
+                _showDeleteTaskDialog(taskNotifier, task);
               },
               icon: const Icon(Icons.delete, color: Colors.redAccent),
             ),
@@ -123,5 +122,22 @@ class _TaskScreenState extends State<TaskScreen> {
         );
       }),
     );
+  }
+
+  void _showDeleteTaskDialog(TaskNotifier taskNotifier, Task task) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DeleteDialog(
+              title: 'Eliminar tarea',
+              content: '¿Está seguro de eliminar la tarea?',
+              onDelete: () {
+                taskNotifier.deleteTask(task);
+                if (taskNotifier.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(taskNotifier.errorMessage!)));
+                }
+              });
+        });
   }
 }

@@ -47,6 +47,11 @@ class TodoRepository {
     await db.delete('Plans', where: 'id = ?', whereArgs: [plan.id]);
   }
 
+  Future<void> deleteAllTaskForPlan(Plan plan) async {
+    final db = await database;
+    await db.delete('Tasks', where: 'planId = ?', whereArgs: [plan.id]);
+  }
+
   Future<List<Task>> getTasksForPlan(Plan plan) async {
     final db = await database;
     final List<Map<String, dynamic>> taskMaps =
@@ -58,5 +63,14 @@ class TodoRepository {
     final db = await database;
     int id = await db.insert('Tasks', task.toMap());
     return id;
+  }
+
+  Future<void> deleteTask(Task task) async {
+    final db = await database;
+    await db.delete(
+      'Tasks',
+      where: 'id = ?',
+      whereArgs: [task.id]
+    );
   }
 }

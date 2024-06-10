@@ -14,4 +14,8 @@ class TaskService {
   Future<int> addTask(Task task) async {
     return await _todoRepository.insertTask(task);
   }
+
+  Future<void> deleteTask(Task task) async {
+    await _todoRepository.deleteTask(task);
+  }
 }

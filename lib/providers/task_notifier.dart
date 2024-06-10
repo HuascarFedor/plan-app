@@ -45,4 +45,15 @@ class TaskNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> deleteTask(Task task) async {
+    try {
+      _errorMessage = null;
+      notifyListeners();
+      await _taskController.deleteTask(task);
+    } catch (e) {
+      _errorMessage = "Error al eliminar la tarea $e";
+    }
+    notifyListeners();
+  }
 }
