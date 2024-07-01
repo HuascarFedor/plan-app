@@ -18,4 +18,8 @@ class TaskService {
   Future<void> deleteTask(Task task) async {
     await _todoRepository.deleteTask(task);
   }
+
+  Future<void> updateTask(Task task) async {
+    await _todoRepository.updateTask(task);
+  }
 }

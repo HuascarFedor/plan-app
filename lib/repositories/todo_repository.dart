@@ -67,10 +67,15 @@ class TodoRepository {
 
   Future<void> deleteTask(Task task) async {
     final db = await database;
-    await db.delete(
-      'Tasks',
-      where: 'id = ?',
-      whereArgs: [task.id]
-    );
+    await db.delete('Tasks', where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  Future<void> updateTask(Task task) async {
+    final db = await database;
+    await db.update('Tasks', {
+      'complete': task.complete ? 1 : 0,
+    },
+    where: 'id = ?',
+    whereArgs: [task.id]);
   }
 }

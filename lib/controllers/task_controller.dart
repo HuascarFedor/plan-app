@@ -47,4 +47,13 @@ class TaskController {
       _tasks.removeWhere((item) => item.id == task.id);
     }
   }
+
+  Future<void> updateTaskCompletion(Task task, bool isComplete) async {
+    try {
+      task.complete = isComplete;
+      await _taskService.updateTask(task);
+    } catch (e) {
+      throw Exception('Error al completar la tarea: $e');
+    }
+  }
 }

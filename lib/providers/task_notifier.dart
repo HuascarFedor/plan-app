@@ -56,4 +56,15 @@ class TaskNotifier extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> updateTaskCompletion(Task task, bool isComplete) async {
+    try {
+      _errorMessage = null;
+      notifyListeners();
+      await _taskController.updateTaskCompletion(task, isComplete);
+    } catch (e) {
+      _errorMessage = "Error al completar la tarea: $e";
+    }
+    notifyListeners();
+  }
 }

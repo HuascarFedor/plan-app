@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plan_app/models/task.dart';
+import 'package:plan_app/views/mixins/scroll_to_last_item_mixin.dart';
 import 'package:plan_app/views/widgets/add_dialog.dart';
 import 'package:plan_app/views/widgets/delete_dialog.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,18 @@ class TaskScreen extends StatefulWidget {
   State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen> {
+class _TaskScreenState extends State<TaskScreen> with ScrollToLastItemMixin {
+  final ScrollController _scrollController = ScrollController();
   late Plan plan;
+
+  @override
+  ScrollController get scrollController => _scrollController;
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -88,7 +99,7 @@ class _TaskScreenState extends State<TaskScreen> {
       );
     }
     return ListView.builder(
-      //controller: scrollController,
+      controller: scrollController,
       itemCount: taskNotifier.taskCount,
       itemBuilder: ((context, index) {
         final task = taskNotifier.tasks[index];
@@ -104,6 +115,14 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
           ),
           child: ListTile(
+            leading: Checkbox(
+              value: task.complete,
+              onChanged: (bool? selected) {
+                if (selected != null) {
+                  taskNotifier.updateTaskCompletion(task, selected);
+                }
+              },
+            ),
             title: Text(
               task.description,
               style: const TextStyle(
